@@ -1,0 +1,58 @@
+{
+  "entities": {
+    "doctor": {
+      "title": "Doctor",
+      "description": "Authorized personnel. Either admin or regular doctor.",
+      "type": "object",
+      "required": ["email", "role"],
+      "properties": {
+        "email": { "type": "string", "description": "Email address of the doctor" },
+        "role": { "type": "string", "enum": ["admin", "doctor"] }
+      }
+    },
+    "patient": {
+      "title": "Patient",
+      "description": "Patient medical record overview",
+      "type": "object",
+      "required": ["full_name", "phone_number", "address", "created_at", "created_by"],
+      "properties": {
+        "full_name": { "type": "string" },
+        "phone_number": { "type": "string" },
+        "address": { "type": "string" },
+        "medical_history": { "type": "string" },
+        "created_at": { "type": "number", "description": "Timestamp created" },
+        "created_by": { "type": "string", "description": "Doctor UID who created the patient" }
+      }
+    },
+    "visit": {
+      "title": "Visit",
+      "description": "A single medical visit for a patient",
+      "type": "object",
+      "required": ["visit_date", "diagnosis", "notes", "created_by"],
+      "properties": {
+        "visit_date": { "type": "number", "description": "Timestamp of visit" },
+        "diagnosis": { "type": "string" },
+        "notes": { "type": "string" },
+        "clinical_images": { "type": "array", "items": { "type": "string" } },
+        "lab_images": { "type": "array", "items": { "type": "string" } },
+        "audio_records": { "type": "array", "items": { "type": "string" } },
+        "prescription_image": { "type": "string" },
+        "created_by": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/doctors/{doctorId}": {
+      "schema": { "$ref": "#/entities/doctor" },
+      "description": "List of authorized doctors and admins"
+    },
+    "/patients/{patientId}": {
+      "schema": { "$ref": "#/entities/patient" },
+      "description": "Patient records"
+    },
+    "/patients/{patientId}/visits/{visitId}": {
+      "schema": { "$ref": "#/entities/visit" },
+      "description": "Clinical visits associated with a patient"
+    }
+  }
+}
